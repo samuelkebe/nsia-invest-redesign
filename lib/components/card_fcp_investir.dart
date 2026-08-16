@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../models/FcpModel.dart';
 
-class CardFcpInvestir extends StatelessWidget {
+
+
+  class CardFcpInvestir extends StatelessWidget {
   final FcpModel? fund;
 
   const CardFcpInvestir({
@@ -59,62 +61,65 @@ class CardFcpInvestir extends StatelessWidget {
                         ),
                       ),
                       child: ClipOval(
-                        child: fund?.urlImage != null && fund!.urlImage.isNotEmpty
-                            ? Image.network(
-                          fund?.urlImage ?? "",
+                        child: Image.asset(
+                          fund?.urlImage ?? 'assets/images/funds/default.png',
+                          width: 56,
+                          height: 56,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.savings_rounded,
-                              color: Colors.white,
-                              size: 40,
+                            return Container(
+                              color: fundColor.withOpacity(0.10),
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.account_balance_rounded,
+                                color: fundColor,
+                                size: 26,
+                              ),
                             );
                           },
-                        )
-                            : const Icon(
-                          Icons.savings_rounded,
-                          color: Colors.white,
-                          size: 40,
                         ),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          (fund?.name ?? '').toUpperCase(),
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 0.2,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            (fund?.name ?? '').toUpperCase(),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.2,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: List.generate(6, (index) {
-                            const barColors = [
-                              Color(0xFF7BC96F),
-                              Color(0xFFA9CB4F),
-                              Color(0xFFD9C440),
-                              Color(0xFFE8A93D),
-                              Color(0xFFE07C3E),
-                              Color(0xFFD9483D),
-                            ];
-                            return Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 1),
-                              width: 5,
-                              height: 6.0 + (index * 3.0),
-                              decoration: BoxDecoration(
-                                color: barColors[index],
-                                borderRadius: BorderRadius.circular(1.5),
-                              ),
-                            );
-                          }),
-                        ),
-                      ],
+                          const SizedBox(height: 4),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: List.generate(6, (index) {
+                              const barColors = [
+                                Color(0xFF7BC96F),
+                                Color(0xFFA9CB4F),
+                                Color(0xFFD9C440),
+                                Color(0xFFE8A93D),
+                                Color(0xFFE07C3E),
+                                Color(0xFFD9483D),
+                              ];
+                              return Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 1),
+                                width: 5,
+                                height: 6.0 + (index * 3.0),
+                                decoration: BoxDecoration(
+                                  color: barColors[index],
+                                  borderRadius: BorderRadius.circular(1.5),
+                                ),
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -231,6 +236,30 @@ class CardFcpInvestir extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD5B23A), // Couleur jaune NSIA INVEST
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      'Souscrire',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+
 
               ],
             ),

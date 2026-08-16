@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
 
-import '../models/FcpModel.dart';
+import 'package:NsiaInvestreDesign/models/FcpModel.dart';
+import 'package:flutter/material.dart';
 
 class CardFcp extends StatelessWidget {
   final FcpModel? fund;
@@ -45,51 +45,57 @@ class CardFcp extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      width: 50,
-                      height: 50,
+                      width: 56,
+                      height: 56,
                       decoration: BoxDecoration(
+                        color: Colors.white,
                         shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            fundColor.withOpacity(0.35),
-                            fundColor.withOpacity(0.8),
-                          ],
+                        border: Border.all(
+                          color: fundColor.withOpacity(0.20),
+                          width: 1,
                         ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.06),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
                       child: ClipOval(
-                        child: fund?.urlImage != null && fund!.urlImage.isNotEmpty
-                            ? Image.network(
-                          fund?.urlImage ?? "",
+                        child: Image.asset(
+                          fund?.urlImage ?? 'assets/images/funds/default.png',
+                          width: 56,
+                          height: 56,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.savings_rounded,
-                              color: Colors.white,
-                              size: 40,
+                            return Container(
+                              color: fundColor.withOpacity(0.10),
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.account_balance_rounded,
+                                color: fundColor,
+                                size: 26,
+                              ),
                             );
                           },
-                        )
-                            : const Icon(
-                          Icons.savings_rounded,
-                          color: Colors.white,
-                          size: 40,
                         ),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          (fund?.name ?? '').toUpperCase(),
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 0.2,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            (fund?.name ?? '').toUpperCase(),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.2,
+                            ),
                           ),
-                        ),
                         const SizedBox(height: 4),
                         Row(
                           mainAxisSize: MainAxisSize.min,
@@ -116,6 +122,7 @@ class CardFcp extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
                   ],
                 ),
                 const SizedBox(height: 10),

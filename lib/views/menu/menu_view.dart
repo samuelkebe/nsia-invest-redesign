@@ -1,4 +1,3 @@
-import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,9 +5,6 @@ import '../../utils/app_colors.dart';
 import '../../utils/langue_provider.dart';
 import '../../utils/theme_provider.dart';
 import '../../views_models/auth_view_model.dart';
-
-
-
 
 class MenuClientView extends StatefulWidget {
   const MenuClientView({super.key});
@@ -18,496 +14,556 @@ class MenuClientView extends StatefulWidget {
 }
 
 class _MenuClientViewState extends State<MenuClientView> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  static const Color nsiaBlue = Color(0xFF002B6C);
+  static const Color nsiaBlueDark = Color(0xFF001F52);
+  static const Color nsiaGold = Color(0xFFD5B23A);
+
+  static const Color background = Color(0xFFF7F7F7);
+  static const Color textColor = Color(0xFF242424);
+  static const Color greyText = Color(0xFF777777);
+  static const Color divider = Color(0xFFE2E2E2);
+  static const Color green = Color(0xFF15966A);
+  static const Color red = Color(0xFFD64C4C);
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final langueProvider = Provider.of<LanguageProvider>(context);
+
     final isDarkMode = themeProvider.isDarkMode;
     final isFrench = langueProvider.locale.languageCode == 'fr';
 
-    return Scaffold(
-      backgroundColor: isDarkMode ? AppColors.black : const Color(0xFFF5F7FA),
-      body: Consumer<AuthViewModel>(
-        builder: (context, value, child) {
-          return Stack(
-            children: [
-              if (!isDarkMode)
-                Positioned.fill(
+    return Material(
+      color: isDarkMode ? const Color(0xFF121212) : background,
+      child: Consumer<AuthViewModel>(
+        builder: (context, authVm, child) {
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: Column(
+              children: [
+                // ============================================================
+                // HEADER PROFIL
+                // ============================================================
+
+                _buildProfileHeader(),
+
+                // ============================================================
+                // MENU
+                // ============================================================
+
+                Expanded(
                   child: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Color(0xFFF5F7FA), Color(0xFFF5F7FA)],
-                      ),
+                    color: isDarkMode
+                        ? const Color(0xFF121212)
+                        : Colors.white,
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      children: [
+                        // ----------------------------------------------------
+                        // MON PROFIL
+                        // ----------------------------------------------------
+
+                        _MenuTile(
+                          icon: Icons.person_outline_rounded,
+                          title: isFrench ? 'Mon profil' : 'My profile',
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+
+                        _MenuTile(
+                          icon: Icons.description_outlined,
+                          title: isFrench
+                              ? 'Mes Relevés de compte'
+                              : 'My account statements',
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+
+                        _MenuTile(
+                          icon: Icons.history_rounded,
+                          title: isFrench
+                              ? 'Mon Historique'
+                              : 'My history',
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+
+                        _MenuTile(
+                          icon: Icons.sync_alt_rounded,
+                          title: isFrench
+                              ? 'Mes opérations en cours'
+                              : 'My pending transactions',
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+
+                        _MenuTile(
+                          icon: Icons.person_search_outlined,
+                          title: isFrench
+                              ? 'Mon profil investisseur'
+                              : 'My investor profile',
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+
+                        // ----------------------------------------------------
+                        // AUTRES SERVICES
+                        // ----------------------------------------------------
+
+                        _SectionTitle(
+                          title: isFrench
+                              ? 'AUTRES SERVICES'
+                              : 'OTHER SERVICES',
+                        ),
+
+                        _MenuTile(
+                          icon: Icons.savings_outlined,
+                          title: isFrench
+                              ? 'Intégrer un plan épargne'
+                              : 'Join a savings plan',
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+
+                        _MenuTile(
+                          icon: Icons.account_balance_outlined,
+                          title: isFrench
+                              ? 'Intégrer un Fonds dédié'
+                              : 'Join a dedicated fund',
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+
+                        _MenuTile(
+                          icon: Icons.calculate_outlined,
+                          title: isFrench
+                              ? 'Simuler mes investissements'
+                              : 'Simulate my investments',
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+
+                        // ----------------------------------------------------
+                        // À PROPOS
+                        // ----------------------------------------------------
+
+                        _SectionTitle(
+                          title: isFrench ? 'À PROPOS' : 'ABOUT',
+                        ),
+
+                        _MenuTile(
+                          icon: Icons.info_outline_rounded,
+                          title: isFrench
+                              ? 'Présentation NSIA ASSET'
+                              : 'About NSIA ASSET',
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+
+                        // ----------------------------------------------------
+                        // DECONNEXION
+                        // ----------------------------------------------------
+
+                        _MenuTile(
+                          icon: Icons.power_settings_new_rounded,
+                          title: isFrench
+                              ? 'Déconnexion'
+                              : 'Logout',
+                          iconColor: red,
+                          titleColor: red,
+                          showDivider: false,
+                          onTap: () {
+                            _showLogoutDialog(context);
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              SafeArea(
-                child: Column(
-                  children: [
-                    /// HEADER
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: isDarkMode ? AppColors.black : Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.06),
-                                  blurRadius: 14,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              radius: 26,
-                              backgroundColor: AppColors.black,
-                              child: Text(
-                                getUserInitials("SK"),
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Mon profil",
-                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                    color: isDarkMode ? AppColors.white : const Color(0xFF1E2022),
-                                    letterSpacing: -0.2,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFE1F57A),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    "Samuel Kébé",
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: const Color(0xFF1E2022),
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 10.5,
-                                      letterSpacing: 0.3,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          InkWell(
-                            borderRadius: BorderRadius.circular(24),
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) {
-                                  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    backgroundColor: Colors.transparent,
-                                    contentPadding: EdgeInsets.zero,
-                                    content: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        gradient: const LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [Color(0xFFEAF5DE), Color(0xFFF7FAF2)],
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              "Déconnexion",
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 12),
-                                            Text(
-                                              "Voulez-vous vraiment vous déconnecter ?",
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                height: 1.4,
-                                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 20),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                TextButton(
-                                                  onPressed: () => Navigator.pop(context),
-                                                  style: TextButton.styleFrom(
-                                                    foregroundColor: Colors.black,
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(10),
-                                                    ),
-                                                  ),
-                                                  child: Text(
-                                                    "Annuler",
-                                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                      fontWeight: FontWeight.w600,
-                                                    ),
-                                                  ),
-                                                ),
-                                                ElevatedButton(
-                                                  onPressed: () async {},
-                                                  style: ElevatedButton.styleFrom(
-                                                    backgroundColor: AppColors.negativeRed,
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(10),
-                                                    ),
-                                                  ),
-                                                  child: Text(
-                                                    "Déconnexion",
-                                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: Container(
-                              width: 46,
-                              height: 46,
-                              decoration: BoxDecoration(
-                                color: AppColors.negativeRed.withOpacity(0.08),
-                                shape: BoxShape.circle,
-                              ),
-                              child:  Icon(
-                                Icons.logout_rounded,
-                                color: AppColors.negativeRed,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    /// CONTENU SCROLLABLE
-                    Expanded(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 24),
-
-                            /// ============================================================
-                            /// SECTION : MON PROFIL
-                            /// ============================================================
-                            Container(
-                              decoration: BoxDecoration(
-                                color: isDarkMode ? AppColors.black : Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: isDarkMode
-                                    ? []
-                                    : [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.04),
-                                    blurRadius: 16,
-                                    offset: const Offset(0, 6),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  _MenuTile(
-                                    icon: Icons.person_outline_rounded,
-                                    iconColor: const Color(0xFF1E2022),
-                                    iconBackground: const Color(0xFFF7F9F5),
-                                    title: "Mon profil",
-                                    subtitle: "",
-                                    onTap: () {},
-                                  ),
-                                  _MenuTile(
-                                    icon: Icons.description_outlined,
-                                    iconColor: const Color(0xFF1E2022),
-                                    iconBackground: const Color(0xFFF7F9F5),
-                                    title: "Mes Relevés de compte",
-                                    subtitle: "",
-                                    onTap: () {},
-                                  ),
-                                  _MenuTile(
-                                    icon: Icons.history_rounded,
-                                    iconColor: const Color(0xFF1E2022),
-                                    iconBackground: const Color(0xFFF7F9F5),
-                                    title: "Mon Historique",
-                                    subtitle: "",
-                                    onTap: () {},
-                                  ),
-                                  _MenuTile(
-                                    icon: Icons.trending_up_rounded,
-                                    iconColor: const Color(0xFF1E2022),
-                                    iconBackground: const Color(0xFFF7F9F5),
-                                    title: "Mes opérations en cours",
-                                    subtitle: "",
-                                    onTap: () {},
-                                  ),
-                                  _MenuTile(
-                                    icon: Icons.pie_chart_outline_rounded,
-                                    iconColor: const Color(0xFF1E2022),
-                                    iconBackground: const Color(0xFFF7F9F5),
-                                    title: "Mon profil investisseur",
-                                    subtitle: "",
-                                    onTap: () {},
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            const SizedBox(height: 24),
-
-                            /// ============================================================
-                            /// SECTION : AUTRES SERVICES
-                            /// ============================================================
-                            Padding(
-                              padding: const EdgeInsets.only(left: 4),
-                              child: Text(
-                                "AUTRES SERVICES",
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.6,
-                                  color: AppColors.black,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-
-                            Container(
-                              decoration: BoxDecoration(
-                                color: isDarkMode ? AppColors.black : Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: isDarkMode
-                                    ? []
-                                    : [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.04),
-                                    blurRadius: 16,
-                                    offset: const Offset(0, 6),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  _MenuTile(
-                                    icon: Icons.savings_rounded,
-                                    iconColor: const Color(0xFF1E2022),
-                                    iconBackground: const Color(0xFFF7F9F5),
-                                    title: "Intégrer un plan épargne",
-                                    subtitle: "",
-                                    onTap: () {},
-                                  ),
-                                  _MenuTile(
-                                    icon: Icons.account_balance_rounded,
-                                    iconColor: const Color(0xFF1E2022),
-                                    iconBackground: const Color(0xFFF7F9F5),
-                                    title: "Intégrer un Fonds dédié",
-                                    subtitle: "",
-                                    onTap: () {},
-                                  ),
-                                  _MenuTile(
-                                    icon: Icons.calculate_rounded,
-                                    iconColor: const Color(0xFF1E2022),
-                                    iconBackground: const Color(0xFFF7F9F5),
-                                    title: "Simuler mes investissements",
-                                    subtitle: "",
-                                    onTap: () {},
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            const SizedBox(height: 24),
-
-                            /// ============================================================
-                            /// SECTION : À PROPOS
-                            /// ============================================================
-                            Padding(
-                              padding: const EdgeInsets.only(left: 4),
-                              child: Text(
-                                "À PROPOS",
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.6,
-                                  color: AppColors.black,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-
-                            Container(
-                              decoration: BoxDecoration(
-                                color: isDarkMode ? AppColors.black : Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: isDarkMode
-                                    ? []
-                                    : [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.04),
-                                    blurRadius: 16,
-                                    offset: const Offset(0, 6),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  _MenuTile(
-                                    icon: Icons.info_outline_rounded,
-                                    iconColor: const Color(0xFF1E2022),
-                                    iconBackground: const Color(0xFFF7F9F5),
-                                    title: "Présentation NSIA ASSET",
-                                    subtitle: "",
-                                    onTap: () {},
-                                  ),
-                                  _MenuTile(
-                                    icon: Icons.logout_rounded,
-                                    iconColor: AppColors.negativeRed,
-                                    iconBackground: AppColors.negativeRed.withOpacity(0.08),
-                                    title: "Déconnexion",
-                                    subtitle: "",
-                                    titleColor: AppColors.negativeRed,
-                                    onTap: () {},
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            const SizedBox(height: 24),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
     );
   }
-}
 
-class _MenuTile extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final Color iconBackground;
-  final String title;
-  final String subtitle;
-  final VoidCallback? onTap;
-  final Color? titleColor;
-  final Color? subtitleColor;
-  final Color? trailingColor;
+  // ==========================================================================
+  // HEADER
+  // ==========================================================================
 
-  const _MenuTile({
-    required this.icon,
-    required this.iconColor,
-    required this.iconBackground,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-    this.titleColor,
-    this.subtitleColor,
-    this.trailingColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        child: Row(
-          children: [
-            Container(
-              width: 42,
-              height: 42,
+  Widget _buildProfileHeader() {
+    return Container(
+      width: double.infinity,
+      height: 146,
+      decoration: const BoxDecoration(
+        color: nsiaBlue,
+      ),
+      child: Stack(
+        children: [
+          // Légère décoration
+          Positioned(
+            right: -35,
+            top: -45,
+            child: Container(
+              width: 130,
+              height: 130,
               decoration: BoxDecoration(
-                color: iconBackground,
-                borderRadius: BorderRadius.circular(13),
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.025),
               ),
-              child: Icon(icon, size: 19, color: iconColor),
             ),
-            const SizedBox(width: 14),
-            Expanded(
+          ),
+
+          Positioned(
+            left: -45,
+            bottom: -65,
+            child: Container(
+              width: 140,
+              height: 140,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: nsiaGold.withOpacity(0.05),
+              ),
+            ),
+          ),
+
+          // Profil
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 27),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: titleColor,
+                  // Avatar
+                  Container(
+                    width: 57,
+                    height: 57,
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.12),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: const CircleAvatar(
+                      backgroundColor: Color(0xFFB7A08D),
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 31,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: subtitleColor ?? Colors.grey[500],
+
+                  const SizedBox(height: 7),
+
+                   Text(
+                    'Samuel Kébé',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
                     ),
+                  ),
+
+                  const SizedBox(height: 3),
+
+                  // Vérifié
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 13,
+                        height: 13,
+                        decoration: const BoxDecoration(
+                          color: green,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 9,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                       Text(
+                        'Vérifié',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: green,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            Icon(
-              Icons.chevron_right_rounded,
-              color: trailingColor ?? Colors.grey[400],
-              size: 20,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ==========================================================================
+  // DIALOG DECONNEXION
+  // ==========================================================================
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(22),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: red.withOpacity(0.08),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.logout_rounded,
+                    color: red,
+                    size: 23,
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
+                 Text(
+                  'Déconnexion',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: textColor,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                 Text(
+                  'Voulez-vous vraiment vous déconnecter ?',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: greyText,
+                    fontSize: 13,
+                    height: 1.4,
+                  ),
+                ),
+
+                const SizedBox(height: 22),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.pop(dialogContext);
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: textColor,
+                          side: const BorderSide(
+                            color: divider,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                          ),
+                        ),
+                        child:  Text(
+                          'Annuler',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          Navigator.pop(dialogContext);
+                          Navigator.pop(context);
+
+                          // TODO:
+                          // await context
+                          //     .read<AuthViewModel>()
+                          //     .logout();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: red,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                          ),
+                        ),
+                        child:  Text(
+                          'Déconnexion',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+// ============================================================================
+// TITRE DE SECTION
+// ============================================================================
+
+class _SectionTitle extends StatelessWidget {
+  final String title;
+
+  const _SectionTitle({
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 30,
+      padding: const EdgeInsets.fromLTRB(7, 10, 7, 4),
+      color: const Color(0xFFF7F7F7),
+      child: Text(
+        title,
+        style:  Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: Color(0xFF777777),
+          fontSize: 9,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.3,
         ),
       ),
     );
   }
 }
 
-String getUserInitials(String? user) {
-  if (user == null || user.isEmpty) return "";
+// ============================================================================
+// MENU TILE
+// ============================================================================
 
-  final words = user.split(' ');
-  final initials = words
-      .map((word) => word.isNotEmpty ? word[0].toUpperCase() : '')
-      .join();
+class _MenuTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final VoidCallback? onTap;
+  final Color? iconColor;
+  final Color? titleColor;
+  final bool showDivider;
 
-  return initials.length > 2 ? initials.substring(0, 3) : initials;
+  const _MenuTile({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+    this.iconColor,
+    this.titleColor,
+    this.showDivider = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 39,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: showDivider
+            ? const Border(
+          bottom: BorderSide(
+            color: Color(0xFFE2E2E2),
+            width: 0.7,
+          ),
+        )
+            : null,
+      ),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 7,
+          ),
+          child: Row(
+            children: [
+              // Icone
+              Container(
+                width: 23,
+                height: 23,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: (iconColor ?? const Color(0xFF002B6C))
+                      .withOpacity(0.06),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Icon(
+                  icon,
+                  size: 15,
+                  color: iconColor ?? const Color(0xFF002B6C),
+                ),
+              ),
+
+              const SizedBox(width: 7),
+
+              // Titre
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: titleColor ?? const Color(0xFF292929),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+
+              // Chevron
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 16,
+                color: Color(0xFF777777),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

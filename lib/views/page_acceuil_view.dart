@@ -120,7 +120,7 @@ class _PageAcceuilViewState extends State<PageAcceuilView> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.grid_view_outlined,
+                        Icons.show_chart_rounded,
                         color: _currentIndex == 1 ? AppColors.primaryColor : Colors.grey.shade500,
                         size: 24,
                       ),
